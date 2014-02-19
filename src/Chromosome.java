@@ -42,9 +42,6 @@ public class Chromosome implements Comparable<Chromosome> {
 	private final String gene;
 	private final int fitness;
 	
-	/** The target gene, converted to an array for convenience. */
-	private static final char[] TARGET_GENE = "Hello, world!".toCharArray();
-
 	/** Convenience randomizer. */
 	private static final Random rand = new Random(System.currentTimeMillis());
 	
@@ -62,10 +59,6 @@ public class Chromosome implements Comparable<Chromosome> {
 	 * Default constructor that generates random gene for this
 	 * <code>Chromosome</code>.
 	 */
-//	public Chromosome() {
-//		String 
-//		this.fitness = calculateFitness(this.gene);
-//	}
 	
 	/**
 	 * Method to retrieve the gene for this <code>Chromosome</code>.
@@ -98,10 +91,7 @@ public class Chromosome implements Comparable<Chromosome> {
 	 */
 	private static int calculateFitness(String gene) {
 		int fitness = 0;
-		char[] arr  = gene.toCharArray();
-		for (int i = 0; i < arr.length; i++) {
-			fitness += Math.abs(((int) arr[i]) - ((int) TARGET_GENE[i]));
-		}
+		
 		
 		return fitness;
 	}
@@ -162,13 +152,18 @@ public class Chromosome implements Comparable<Chromosome> {
 	 * 
 	 * @return A randomly generated <code>Chromosome</code>.
 	 */
-	/* package */ static Chromosome generateRandom() {
-		char[] arr = new char[TARGET_GENE.length];
-		for (int i = 0; i < arr.length; i++) {
-			arr[i] = (char) (rand.nextInt(90) + 32);
-		}
+	static Chromosome generateRandom() {
+		char[] possibleChars = ("0mgcu" + Nanto.itemCodes + Nanto.candidCodes)
+				.toCharArray();
+		System.out.println(possibleChars);
+		int length = 84 * Nanto.time;
 
-		return new Chromosome(String.valueOf(arr));
+		char[] newGene=new char[length];
+
+		for (int i=0; i<length;i++)
+			newGene[i]=possibleChars[rand.nextInt(possibleChars.length)];
+
+		return new Chromosome(String.valueOf(newGene));
 	}
 
 	/**
@@ -176,6 +171,9 @@ public class Chromosome implements Comparable<Chromosome> {
 	 * one another based on fitness.  <code>Chromosome</code> ordering is 
 	 * based on the natural ordering of the fitnesses of the
 	 * <code>Chromosome</code>s.  
+	 * @param c Chromosome to be compared
+	 * @return -1 if this chromosome's fitness is less than c's fitness, 1 if
+	 * bigger, 0 otherwise
 	 */
 	@Override
 	public int compareTo(Chromosome c) {
@@ -189,6 +187,8 @@ public class Chromosome implements Comparable<Chromosome> {
 	}
 	
 	/**
+	 * @param o Object to be compared
+	 * @return true when o is exactly the same as this object.
 	 * @see Object#equals(Object)
 	 */
 	@Override
@@ -202,6 +202,7 @@ public class Chromosome implements Comparable<Chromosome> {
 	}
 	
 	/**
+	 * @return Hash code of the gene and fitness.
 	 * @see Object#hashCode()
 	 */
 	@Override
@@ -209,4 +210,5 @@ public class Chromosome implements Comparable<Chromosome> {
 		return new StringBuilder().append(gene).append(fitness)
 				.toString().hashCode();
 	}
+	
 }

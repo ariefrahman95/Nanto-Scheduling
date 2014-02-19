@@ -11,7 +11,7 @@ class Item {
     }
     
     /* GETTERS & SETTERS */
-    public int getCode() {return code;}
+    public char getCode() {return code;}
     public int getPrice() {return price;}
     public int getRestock() {return restock;}
     

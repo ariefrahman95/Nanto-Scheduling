@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 class Nanto {
     /* VARIABLES */
     private int money;
-    private int time;
+//    private int time;
     private int energy;
     private int strength;
     private int charm;
@@ -14,10 +14,14 @@ class Nanto {
     private int nItem;
     private Candidate[] candid;
     private Item[] items;
+	
+	public static int time;
+	public static String candidCodes;
+	public static String itemCodes;
 
     /* GETTERS & SETTERS */
     public int getMoney() {return money;}
-    public int getTime() {return time;}
+//    public int getTime() {return time;}
     public int getEnergy() {return energy;}
     public int getStrength() {return strength;}
     public int getCharm() {return charm;}
@@ -26,7 +30,7 @@ class Nanto {
     public int getnItem() {return nItem;}
 
     public void setMoney(int money) {this.money = money;}
-    public void setTime(int time) {this.time = time;}
+//    public void setTime(int time) {this.time = time;}
     public void setEnergy(int energy) {this.energy = energy;}
     public void setStrength(int strength) {this.strength = strength;}
     public void setCharm(int charm) {this.charm = charm;}
@@ -34,6 +38,12 @@ class Nanto {
     public void setnCandidate(int nCandidate) {this.nCandidate = nCandidate;}
     public void setnItem(int nItem) {this.nItem = nItem;}
     
+	/* CONSTRUCTOR */
+	public Nanto() {
+		candidCodes = new String();
+		itemCodes = new String();
+	}
+	
     /* METHODS */
     public void load(File f){
         Scanner scan = null;
@@ -44,7 +54,8 @@ class Nanto {
            System.exit(0);
         }
         setMoney(scan.nextInt());
-        setTime(scan.nextInt());
+		time = scan.nextInt();
+//        setTime(scan.nextInt());
         setEnergy(scan.nextInt());
         setStrength(scan.nextInt());
         setCharm(scan.nextInt());
@@ -58,12 +69,19 @@ class Nanto {
 					Integer.parseInt(inputs[1]),Integer.parseInt(inputs[2]),
 					inputs[3].toCharArray(),Integer.parseInt(inputs[4]),
 					Integer.parseInt(inputs[5]),Integer.parseInt(inputs[6]));
+			String concat = Integer.toString(i+1);
+			candidCodes += concat;
         }
+		System.out.println(candidCodes);
         setnItem(scan.nextInt());
         items = new Item[nItem];
         for (int i=0;i<nItem;i++){
-            items[i] = new Item(scan.next().charAt(0),scan.nextInt(),scan.nextInt());
+            items[i] = new Item(scan.next().charAt(0),scan.nextInt(),
+					scan.nextInt());
+			String concat = String.valueOf(items[i].getCode());
+			itemCodes += concat;
         }
+		System.out.println(itemCodes);
         scan.close();
     }
     public void print(){

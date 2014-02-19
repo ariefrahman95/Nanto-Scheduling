@@ -9,7 +9,7 @@ public class LoadFile {
         File f3 = new File("tempat.txt");
         Nanto n = new Nanto();
         n.load(f1);
-        n.print();
+//        n.print();
         
         int[][] jCandid = new int[4][84];
         int[][] jPlace = new int[4][84];
@@ -30,11 +30,11 @@ public class LoadFile {
         }
         scan.close();
         
-        for (int a=0;a<4;a++){
-            for (int b=0;b<84;b++)
-                System.out.print(jCandid[a][b]);
-            System.out.println();
-        }
+//        for (int a=0;a<4;a++){
+//            for (int b=0;b<84;b++)
+//                System.out.print(jCandid[a][b]);
+//            System.out.println();
+//        }
         
         
         scan = null;
@@ -54,12 +54,16 @@ public class LoadFile {
         }
         scan.close();
         
-        System.out.println();
-        System.out.println();
-        for (int a=0;a<4;a++){
-            for (int b=0;b<84;b++)
-                System.out.print(jPlace[a][b]);
-            System.out.println();
-        }
+//        System.out.println();
+//        System.out.println();
+//        for (int a=0;a<4;a++){
+//            for (int b=0;b<84;b++)
+//                System.out.print(jPlace[a][b]);
+//            System.out.println();
+//        }
+		
+		System.out.println(Chromosome.generateRandom().getGene());
+		System.out.println(Chromosome.generateRandom().getGene());
+		System.out.println(Chromosome.generateRandom().getGene());
     }
 }
