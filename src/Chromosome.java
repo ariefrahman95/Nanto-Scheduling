@@ -59,6 +59,15 @@ public class Chromosome implements Comparable<Chromosome> {
 	}
 	
 	/**
+	 * Default constructor that generates random gene for this
+	 * <code>Chromosome</code>.
+	 */
+//	public Chromosome() {
+//		String 
+//		this.fitness = calculateFitness(this.gene);
+//	}
+	
+	/**
 	 * Method to retrieve the gene for this <code>Chromosome</code>.
 	 *
 	 * @return The gene for this <code>Chromosome</code>.
