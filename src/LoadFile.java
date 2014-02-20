@@ -9,10 +9,7 @@ public class LoadFile {
         File f3 = new File("tempat.txt");
         Nanto n = new Nanto();
         n.load(f1);
-//        n.print();
-        
-        int[][] jCandid = new int[4][84];
-        int[][] jPlace = new int[4][84];
+  
         Scanner scan = null;
         try{
            scan = new Scanner(f2);
@@ -24,18 +21,11 @@ public class LoadFile {
         while (scan.hasNextLine()){
             String line = scan.nextLine();
             for (int i = 0; i < line.length(); i++) {
-                jCandid[j][i] = Character.getNumericValue(line.charAt(i));
+                Nanto.jCandid[j][i] = Character.getNumericValue(line.charAt(i));
             }
             j += 1;
         }
         scan.close();
-        
-//        for (int a=0;a<4;a++){
-//            for (int b=0;b<84;b++)
-//                System.out.print(jCandid[a][b]);
-//            System.out.println();
-//        }
-        
         
         scan = null;
         try{
@@ -48,22 +38,46 @@ public class LoadFile {
         while (scan.hasNextLine()){
             String line = scan.nextLine();
             for (int i = 0; i < line.length(); i++) {
-                jPlace[j][i] = Character.getNumericValue(line.charAt(i));
+                Nanto.jPlace[j][i] = Character.getNumericValue(line.charAt(i));
             }
             j += 1;
         }
         scan.close();
-        
-//        System.out.println();
-//        System.out.println();
-//        for (int a=0;a<4;a++){
-//            for (int b=0;b<84;b++)
-//                System.out.print(jPlace[a][b]);
-//            System.out.println();
-//        }
 		
-		System.out.println(Chromosome.generateRandom().getGene());
-		System.out.println(Chromosome.generateRandom().getGene());
-		System.out.println(Chromosome.generateRandom().getGene());
+		System.out.println(Nanto.money + " " + Nanto.time + " " +
+				Nanto.energy + " " + Nanto.strength + " " + Nanto.charm + " " +
+				Nanto.brain);
+		System.out.println(Nanto.nCandidate);
+		for(int i = 0; i < Nanto.nCandidate; i++) {
+			char code = Nanto.candidCodes.charAt(i);
+			System.out.println(Nanto.candid.get(code));
+		}
+		System.out.println(Nanto.nItem);
+		for(int i = 0; i < Nanto.nItem; i++) {
+			char code = Nanto.itemCodes.charAt(i);
+			System.out.println(Nanto.items.get(code));
+		}
+		
+		System.out.println();
+		
+		for(int x = 0; x < Nanto.nCandidate; x++) {
+			for(int y = 0; y < 84; y++) {
+				System.out.print(Nanto.jCandid[x][y]);
+			}
+			System.out.println();
+		}
+		
+		System.out.println();
+		
+		for(int x = 0; x < 4; x++) {
+			for(int y = 0; y < 84; y++) {
+				System.out.print(Nanto.jCandid[x][y]);
+			}
+			System.out.println();
+		}
+		
+		// Test one chromosome's fitness
+		Chromosome c1 = Chromosome.generateRandom();
+		System.out.println(c1);
     }
 }

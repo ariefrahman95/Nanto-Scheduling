@@ -20,9 +20,9 @@ class Item {
     public void setRestock(int restock) {this.restock = restock;}
     
     /* METHODS */
-    public void print(){
-        System.out.println(code);
-        System.out.println(price);
-        System.out.println(restock);
-    }
+    @Override
+	public String toString() {
+		String temp = code + " " + price + " " + restock;
+		return temp;
+	}
 }

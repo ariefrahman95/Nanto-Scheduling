@@ -21,6 +21,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -92,6 +93,127 @@ public class Chromosome implements Comparable<Chromosome> {
 	private static int calculateFitness(String gene) {
 		int fitness = 0;
 		
+		// Game states
+		int energyPerDay = Nanto.energy;
+		int money = Nanto.money;
+		int strength = Nanto.strength;
+		int charm = Nanto.charm;
+		int brain = Nanto.brain;
+		int curEnergy;
+		
+		HashMap<Character, Integer> stock = new HashMap<> ();
+		HashMap<Character, Integer> inventory = new HashMap<> ();
+		HashMap<Character, Integer> maxVisit = new HashMap<> ();
+		char[] geneArr = gene.toCharArray();
+		char[] itemCode = Nanto.itemCodes.toCharArray();
+		char[] candidCode = Nanto.candidCodes.toCharArray();
+		
+		// Set inventory
+		for(int i = 0; i < Nanto.nItem; i++) {
+			inventory.put(itemCode[i], 0);
+		}
+		
+		for(int i = 0; i < 7 * Nanto.time; i++) {
+			// Restock items for sale
+			for(int x = 0; x < Nanto.nItem; x++) {
+				Item temp = Nanto.items.get(itemCode[x]);
+				stock.put(temp.getCode(), temp.getRestock());
+			}
+			
+			// Restore max visit per candidate
+			for(int x = 0; x < Nanto.nCandidate; x++) {
+				Candidate temp = Nanto.candid.get(candidCode[x]);
+				maxVisit.put(candidCode[x], temp.getMax());
+			}
+			
+			// Recharge energy
+			curEnergy = energyPerDay;
+			
+			for(int j = 0; j < 12; j++) {
+				int idx = j + i * 12;
+				if(geneArr[idx] == '0') {
+					// Do nothing
+				} else if(Character.isUpperCase(geneArr[idx])) {
+					// Check if it's item code
+					for(int x = 0; x < Nanto.nItem; x++) {
+						if(geneArr[idx] == itemCode[x]) {
+							// Check if money is enough and there is stock
+							Item toBuy = Nanto.items.get(itemCode[x]);
+							int price = toBuy.getPrice();
+							int curStock = stock.get(itemCode[x]);
+							if(money >= price && stock.get(itemCode[x]) != 0) {
+								money -= price;
+								stock.put(itemCode[x], curStock - 1);
+								int curInventory = inventory.get(itemCode[x]);
+								inventory.put(itemCode[x], curInventory + 1);
+							}
+							break;
+						}
+					}
+				} else if (Character.isDigit(geneArr[idx])) {
+					// Check if it's candidate code
+					for(int x = 0; x < Nanto.nCandidate; x++) {
+						if(geneArr[idx] == candidCode[x]) {
+							// Check if all prerequisite is enough
+							Candidate toVisit = Nanto.candid.get(candidCode[x]);
+							char[] prereq = toVisit.getPrerequisite();
+							boolean haveItems = true;
+							if(prereq[0] != '-') {
+								for(int k = 0; k < prereq.length; k++) {
+									if(inventory.get(prereq[k]) == 0) {
+										haveItems = false;
+										break;
+									}
+								}
+							}
+							int visitRemaining = maxVisit.get(candidCode[x]);
+							if(haveItems &&
+									Nanto.jCandid[x][idx % 84] == 1 &&
+									visitRemaining != 0 &&
+									brain >= toVisit.getBrain() &&
+									charm >= toVisit.getCharm() &&
+									strength >= toVisit.getStrength() &&
+									curEnergy >= toVisit.getEnergy()) {
+								fitness += toVisit.getEnlightenment();
+								curEnergy -= toVisit.getEnergy();
+								visitRemaining--;
+								maxVisit.put(candidCode[x], visitRemaining);
+								if(visitRemaining == 0 || idx == Nanto.time * 84 - 1 || 
+										geneArr[idx] != geneArr[idx+1]) {
+									for(int k = 0; k < prereq.length; k++) {
+										if(prereq[k] != '-') {											
+											int amount = inventory.get(prereq[k]);
+											inventory.put(prereq[k], amount - 1);
+										}
+									}
+								}
+							}
+							break;
+						}
+					}
+				} else if(geneArr[idx] == 'm') {
+					if(Nanto.jPlace[0][idx % 84] ==	 1 && curEnergy >= 8) {
+						money += 10000;
+						curEnergy -= 8;
+					}
+				} else if(geneArr[idx] == 'g') {
+					if(Nanto.jPlace[1][idx % 84] == 1 && curEnergy >= 12) {
+						strength += 2;
+						curEnergy -= 12;
+					}
+				} else if(geneArr[idx] == 'c') {
+					if(Nanto.jPlace[2][idx % 84] == 1 &&	curEnergy >= 6) {
+						charm += 2;
+						curEnergy -= 6;
+					}
+				} else if(geneArr[idx] == 'u') {
+					if(Nanto.jPlace[3][idx % 84] == 1 &&	curEnergy >= 15) {
+						brain += 3;
+						curEnergy -= 15;
+					}
+				}
+			}
+		}
 		
 		return fitness;
 	}
@@ -148,14 +270,13 @@ public class Chromosome implements Comparable<Chromosome> {
 	}
 	
 	/**
-	 * A convenience method to generate a randome <code>Chromosome</code>.
+	 * A convenience method to generate a random <code>Chromosome</code>.
 	 * 
 	 * @return A randomly generated <code>Chromosome</code>.
 	 */
 	static Chromosome generateRandom() {
 		char[] possibleChars = ("0mgcu" + Nanto.itemCodes + Nanto.candidCodes)
 				.toCharArray();
-		System.out.println(possibleChars);
 		int length = 84 * Nanto.time;
 
 		char[] newGene=new char[length];
@@ -211,4 +332,8 @@ public class Chromosome implements Comparable<Chromosome> {
 				.toString().hashCode();
 	}
 	
+	@Override
+	public String toString() {
+		return gene + "\n" + fitness;
+	}
 }
