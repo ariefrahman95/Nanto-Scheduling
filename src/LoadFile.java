@@ -3,7 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class LoadFile {
-    static void load(File f2,File f3){
+    void load(File f2,File f3){
         Scanner scan = null;
         try{
            scan = new Scanner(f2);
@@ -39,7 +39,7 @@ public class LoadFile {
         scan.close();
     }
     
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         File f1 = new File("info.txt");
         File f2 = new File("kandidat.txt");
         File f3 = new File("tempat.txt");
@@ -84,5 +84,5 @@ public class LoadFile {
 		System.out.println(c1);
                 
                 GUI giyuai = new GUI();
-    }
+    }*/
 }

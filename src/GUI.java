@@ -86,6 +86,10 @@ public class GUI extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Nanto's Schedule");
+        setBounds(new java.awt.Rectangle(825, 5, 470, 760));
+        setPreferredSize(new java.awt.Dimension(470, 760));
+        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(25, 36, 42));
 
