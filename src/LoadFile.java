@@ -81,6 +81,5 @@ public class LoadFile {
 		System.out.println(c1);
                 
                 GUI giyuai = new GUI();
-                giyuai.main(args);
     }
 }

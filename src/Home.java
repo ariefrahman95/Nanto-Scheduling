@@ -43,6 +43,7 @@ public class Home extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Nanto-Scheduling");
         setLocationByPlatform(true);
+        setName("home_frame"); // NOI18N
         setResizable(false);
 
         home_label_filePemain.setText("File Pemain");
@@ -75,6 +76,11 @@ public class Home extends javax.swing.JFrame {
         home_button_bikin.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         home_button_bikin.setText("BIKIN");
         home_button_bikin.setActionCommand("");
+        home_button_bikin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                home_button_bikinActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -162,6 +168,10 @@ public class Home extends javax.swing.JFrame {
             home_text_filePemain.setText(fc.getSelectedFile().getAbsolutePath());
         }
     }//GEN-LAST:event_home_button_jadwalTempatActionPerformed
+
+    private void home_button_bikinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_home_button_bikinActionPerformed
+        new GA().setVisible(true);
+    }//GEN-LAST:event_home_button_bikinActionPerformed
 
     /**
      * @param args the command line arguments
