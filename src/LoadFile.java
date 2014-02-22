@@ -79,5 +79,8 @@ public class LoadFile {
 		// Test one chromosome's fitness
 		Chromosome c1 = Chromosome.generateRandom();
 		System.out.println(c1);
+                
+                GUI giyuai = new GUI();
+                giyuai.main(args);
     }
 }
