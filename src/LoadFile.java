@@ -3,13 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class LoadFile {
-    public static void main(String[] args) {
-        File f1 = new File("info.txt");
-        File f2 = new File("kandidat.txt");
-        File f3 = new File("tempat.txt");
-        Nanto n = new Nanto();
-        n.load(f1);
-  
+    static void load(File f2,File f3){
         Scanner scan = null;
         try{
            scan = new Scanner(f2);
@@ -43,6 +37,15 @@ public class LoadFile {
             j += 1;
         }
         scan.close();
+    }
+    
+    public static void main(String[] args) {
+        File f1 = new File("info.txt");
+        File f2 = new File("kandidat.txt");
+        File f3 = new File("tempat.txt");
+        Nanto n = new Nanto();
+        n.load(f1);
+        load(f2,f3);
 		
 		System.out.println(Nanto.money + " " + Nanto.time + " " +
 				Nanto.energy + " " + Nanto.strength + " " + Nanto.charm + " " +
