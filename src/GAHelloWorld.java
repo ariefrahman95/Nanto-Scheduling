@@ -1,6 +1,9 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 /*
@@ -43,46 +46,58 @@ public class GAHelloWorld {
 	 * 
 	 * @param args Command-line arguments (ignored).
 	 */
-	public static void main(String[] args) {
+       public static void load(File f2,File f3){
+            Scanner scan = null;
+            try{
+               scan = new Scanner(f2);
+            }
+            catch(FileNotFoundException e){
+               System.exit(0);
+            }
+            int j = 0;
+            while (scan.hasNextLine()){
+                String line = scan.nextLine();
+                for (int i = 0; i < line.length(); i++) {
+                    Nanto.jCandid[j][i] = Character.getNumericValue(line.charAt(i));
+                }
+                j += 1;
+            }
+            scan.close();
+
+            scan = null;
+            try{
+               scan = new Scanner(f3);
+            }
+            catch(FileNotFoundException e){
+               System.exit(0);
+            }
+            j = 0;
+            while (scan.hasNextLine()){
+                String line = scan.nextLine();
+                for (int i = 0; i < line.length(); i++) {
+                    Nanto.jPlace[j][i] = Character.getNumericValue(line.charAt(i));
+                }
+                j += 1;
+            }
+            scan.close();
+        }
+       
+        public static void Export(Chromosome best) throws IOException{
+            FileWriter fw = new FileWriter("hasil.txt");
+            PrintWriter pw = new PrintWriter(fw);
+            pw.print(best.getGene());
+            pw.flush();
+            pw.close();
+            fw.close();
+        }
+    
+	public static void main(String[] args) throws IOException {
 		File f1 = new File("info.txt");
-        File f2 = new File("kandidat.txt");
-        File f3 = new File("tempat.txt");
-        Nanto n = new Nanto();
-        n.load(f1);
-  
-        Scanner scan = null;
-        try{
-           scan = new Scanner(f2);
-        }
-        catch(FileNotFoundException e){
-           System.exit(0);
-        }
-        int j = 0;
-        while (scan.hasNextLine()){
-            String line = scan.nextLine();
-            for (int i = 0; i < line.length(); i++) {
-                Nanto.jCandid[j][i] = Character.getNumericValue(line.charAt(i));
-            }
-            j += 1;
-        }
-        scan.close();
-        
-        scan = null;
-        try{
-           scan = new Scanner(f3);
-        }
-        catch(FileNotFoundException e){
-           System.exit(0);
-        }
-        j = 0;
-        while (scan.hasNextLine()){
-            String line = scan.nextLine();
-            for (int i = 0; i < line.length(); i++) {
-                Nanto.jPlace[j][i] = Character.getNumericValue(line.charAt(i));
-            }
-            j += 1;
-        }
-        scan.close();
+                File f2 = new File("kandidat.txt");
+                File f3 = new File("tempat.txt");
+                Nanto n = new Nanto();
+                n.load(f1);
+                load(f2,f3);
 		
 		// The size of the simulation population
 		final int populationSize = 4;
@@ -125,6 +140,7 @@ public class GAHelloWorld {
 		long endTime = System.currentTimeMillis();
 		
 		// Print out some information to the console.
+                Export(best);
 		System.out.println("Generation   " + i + ": " + best.getGene());
 		System.out.println("Gene Fitness " + i + ": " + best.getFitness());
 		System.out.println("Total execution time: " + (endTime - startTime) + 
