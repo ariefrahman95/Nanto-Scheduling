@@ -1,3 +1,8 @@
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 /*
 * The MIT License
 * 
@@ -39,16 +44,55 @@ public class GAHelloWorld {
 	 * @param args Command-line arguments (ignored).
 	 */
 	public static void main(String[] args) {
+		File f1 = new File("info.txt");
+        File f2 = new File("kandidat.txt");
+        File f3 = new File("tempat.txt");
+        Nanto n = new Nanto();
+        n.load(f1);
+  
+        Scanner scan = null;
+        try{
+           scan = new Scanner(f2);
+        }
+        catch(FileNotFoundException e){
+           System.exit(0);
+        }
+        int j = 0;
+        while (scan.hasNextLine()){
+            String line = scan.nextLine();
+            for (int i = 0; i < line.length(); i++) {
+                Nanto.jCandid[j][i] = Character.getNumericValue(line.charAt(i));
+            }
+            j += 1;
+        }
+        scan.close();
+        
+        scan = null;
+        try{
+           scan = new Scanner(f3);
+        }
+        catch(FileNotFoundException e){
+           System.exit(0);
+        }
+        j = 0;
+        while (scan.hasNextLine()){
+            String line = scan.nextLine();
+            for (int i = 0; i < line.length(); i++) {
+                Nanto.jPlace[j][i] = Character.getNumericValue(line.charAt(i));
+            }
+            j += 1;
+        }
+        scan.close();
 		
 		// The size of the simulation population
-		final int populationSize = 2048;
+		final int populationSize = 4;
 		
 		// The maximum number of generations for the simulation.
 		final int maxGenerations = 16384;
 		
 		// The probability of crossover for any member of the population,
 		// where 0.0 <= crossoverRatio <= 1.0
-		final float crossoverRatio = 0.8f;
+		final float crossoverRatio = 0.5f;
 		
 		// The portion of the population that will be retained without change
 		// between evolutions, where 0.0 <= elitismRatio < 1.0
@@ -56,7 +100,7 @@ public class GAHelloWorld {
 		
 		// The probability of mutation for any member of the population,
 		// where 0.0 <= mutationRatio <= 1.0
-		final float mutationRatio = 0.03f;
+		final float mutationRatio = 0.1f;
 	
 		// Get the current run time.  Not very accurate, but useful for 
 		// some simple reporting.
@@ -71,8 +115,8 @@ public class GAHelloWorld {
 		int i = 0;
 		Chromosome best = pop.getPopulation()[0];
 		
-		while ((i++ <= maxGenerations) && (best.getFitness() != 0)) {
-			System.out.println("Generation " + i + ": " + best.getGene());
+		while (i++ <= maxGenerations) {
+			//System.out.println("Generation " + i + ": " + best.getGene());
 			pop.evolve();
 			best = pop.getPopulation()[0];
 		}
@@ -81,7 +125,8 @@ public class GAHelloWorld {
 		long endTime = System.currentTimeMillis();
 		
 		// Print out some information to the console.
-		System.out.println("Generation " + i + ": " + best.getGene());
+		System.out.println("Generation   " + i + ": " + best.getGene());
+		System.out.println("Gene Fitness " + i + ": " + best.getFitness());
 		System.out.println("Total execution time: " + (endTime - startTime) + 
 				"ms");
 	}

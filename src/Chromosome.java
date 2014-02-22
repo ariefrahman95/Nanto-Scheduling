@@ -82,9 +82,7 @@ public class Chromosome implements Comparable<Chromosome> {
 	}
 	
 	/**
-	 * Helper method used to calculate the fitness for a given gene.  The
-	 * fitness is defined as being the sum of the absolute value of the 
-	 * difference between the current gene and the target gene.
+	 * Helper method used to calculate the fitness for a given gene.
 	 * 
 	 * @param gene The gene to calculate the fitness for.
 	 * 
@@ -231,8 +229,10 @@ public class Chromosome implements Comparable<Chromosome> {
 	public Chromosome mutate() {
 		char[] arr  = gene.toCharArray();
 		int idx     = rand.nextInt(arr.length);
-		int delta   = (rand.nextInt() % 90) + 32;
-		arr[idx]    = (char) ((arr[idx] + delta) % 122);
+		char[] possibleChars = ("0mgcu" + Nanto.itemCodes + Nanto.candidCodes)
+				.toCharArray();
+		char change = possibleChars[rand.nextInt(possibleChars.length)];
+		arr[idx]    = change;
 
 		return new Chromosome(String.valueOf(arr));
 	}
@@ -299,9 +299,9 @@ public class Chromosome implements Comparable<Chromosome> {
 	@Override
 	public int compareTo(Chromosome c) {
 		if (fitness < c.fitness) {
-			return -1;
-		} else if (fitness > c.fitness) {
 			return 1;
+		} else if (fitness > c.fitness) {
+			return -1;
 		}
 		
 		return 0;
