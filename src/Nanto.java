@@ -5,12 +5,6 @@ import java.util.HashMap;
 
 class Nanto {
     /* VARIABLES */
-//    private int money;
-//    private int time;
-//    private int energy;
-//    private int strength;
-//    private int charm;
-//    private int brain;
 	public static int[][] jCandid = new int[9][84];
     public static int[][] jPlace = new int[4][84];
 	public static int money;
@@ -70,20 +64,4 @@ class Nanto {
         }
         scan.close();
     }
-//    public void print(){
-//        System.out.println(money);
-//        System.out.println(time);
-//        System.out.println(energy);
-//        System.out.println(strength);
-//        System.out.println(charm);
-//        System.out.println(brain);
-//        System.out.println(nCandidate);
-//        for (int i=0;i<nCandidate;i++){
-//            candid[i].print();
-//        }
-//        System.out.println(nItem);
-//        for (int i=0;i<nItem;i++){
-//            items[i].print();
-//        }
-//    }
 }

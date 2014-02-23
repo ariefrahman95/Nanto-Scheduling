@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
- * This class is used to define a chromosome for the gentic algorithm 
+ * This class is used to define a chromosome for the genetic algorithm 
  * simulation.  
  * 
  * This class is essentially nothing more than a container for the details 
@@ -36,8 +36,8 @@ import java.util.Random;
  * or <code>mutate</code> will result in a new <code>Chromosome</code>
  * instance being created.
  * 
- * @author John Svazic
- * @version 1.0
+ * @author Arief Rahman
+ * @version Tubes 1
  */
 public class Chromosome implements Comparable<Chromosome> {
 	private final String gene;
@@ -55,11 +55,6 @@ public class Chromosome implements Comparable<Chromosome> {
 		this.gene    = gene;
 		this.fitness = calculateFitness(gene);
 	}
-	
-	/**
-	 * Default constructor that generates random gene for this
-	 * <code>Chromosome</code>.
-	 */
 	
 	/**
 	 * Method to retrieve the gene for this <code>Chromosome</code>.
@@ -290,7 +285,7 @@ public class Chromosome implements Comparable<Chromosome> {
 	/**
 	 * Method to allow for comparing <code>Chromosome</code> objects with
 	 * one another based on fitness.  <code>Chromosome</code> ordering is 
-	 * based on the natural ordering of the fitnesses of the
+	 * based on the natural ordering of the fitness of the
 	 * <code>Chromosome</code>s.  
 	 * @param c Chromosome to be compared
 	 * @return -1 if this chromosome's fitness is less than c's fitness, 1 if

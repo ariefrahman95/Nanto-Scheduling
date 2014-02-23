@@ -8,9 +8,9 @@ import java.util.Scanner;
 
 /*
 * The MIT License
-* 
+*
 * Copyright (c) 2011 John Svazic
-* 
+*
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
@@ -31,13 +31,11 @@ import java.util.Scanner;
 */
 
 /**
- * Driver class for the "Hello, world!" genetic algorithm simulation.
- * 
  * This class is strictly used for an entry point into the simulation itself,
  * it has no other functionality.
  * 
- * @author John Svazic
- * @version 1.0
+ * @author Arief Rahman
+ * @version Tubes 1
  */
 public class GAHelloWorld {
 
@@ -93,29 +91,29 @@ public class GAHelloWorld {
     
 	public static void main(String[] args) throws IOException {
 		File f1 = new File("info.txt");
-                File f2 = new File("kandidat.txt");
-                File f3 = new File("tempat.txt");
-                Nanto n = new Nanto();
-                n.load(f1);
-                load(f2,f3);
+        File f2 = new File("kandidat.txt");
+        File f3 = new File("tempat.txt");
+        Nanto n = new Nanto();
+        n.load(f1);
+        load(f2,f3);
 		
 		// The size of the simulation population
-		final int populationSize = 4;
+		final int populationSize = 6;
 		
 		// The maximum number of generations for the simulation.
 		final int maxGenerations = 16384;
 		
 		// The probability of crossover for any member of the population,
 		// where 0.0 <= crossoverRatio <= 1.0
-		final float crossoverRatio = 0.5f;
+		final float crossoverRatio = 1.0f;
 		
 		// The portion of the population that will be retained without change
 		// between evolutions, where 0.0 <= elitismRatio < 1.0
-		final float elitismRatio = 0.1f;
+		final float elitismRatio = 0.0f;
 		
 		// The probability of mutation for any member of the population,
 		// where 0.0 <= mutationRatio <= 1.0
-		final float mutationRatio = 0.1f;
+		final float mutationRatio = 1.0f;
 	
 		// Get the current run time.  Not very accurate, but useful for 
 		// some simple reporting.
@@ -130,8 +128,13 @@ public class GAHelloWorld {
 		int i = 0;
 		Chromosome best = pop.getPopulation()[0];
 		
+		// Threshold
+		// By iterations
+		// i++ <= maxGenerations
+		// By minimum enlightenment (example highscore : 90)
+		// best.getFitness() < 90
+		
 		while (i++ <= maxGenerations) {
-			//System.out.println("Generation " + i + ": " + best.getGene());
 			pop.evolve();
 			best = pop.getPopulation()[0];
 		}
@@ -140,8 +143,8 @@ public class GAHelloWorld {
 		long endTime = System.currentTimeMillis();
 		
 		// Print out some information to the console.
-                Export(best);
-		System.out.println("Generation   " + i + ": " + best.getGene());
+        Export(best);
+		System.out.println("Best Gene    " + i + ": " + best.getGene());
 		System.out.println("Gene Fitness " + i + ": " + best.getFitness());
 		System.out.println("Total execution time: " + (endTime - startTime) + 
 				"ms");
