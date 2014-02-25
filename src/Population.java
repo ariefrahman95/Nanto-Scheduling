@@ -75,12 +75,9 @@ public class Population {
 		this.mutation = mutationRatio;
 		
 		// Generate an initial population
-		this.popArr = new Chromosome[size];/*
-                this.cross = new Chromosome[size];
-                this.mutate = new Chromosome[size];
-                this.unsorted = new Chromosome[size];*/
+		this.popArr = new Chromosome[size];
 		for (int i = 0; i < size; i++) {
-			this.popArr[i] = Chromosome.generateRandom();
+			this.popArr[i] = Chromosome.generateRandom(i);
 		}
 
 		Arrays.sort(this.popArr);
@@ -109,13 +106,13 @@ public class Population {
 				
 				// Select the parents and mate to get their children
 				Chromosome[] parents = selectParents();
-				Chromosome[] children = parents[0].mate(parents[1]);
+				Chromosome[] children = parents[0].mate(parents[1],parents[0].getId(),parents[1].getId());
                                 
 				// Check to see if the first child should be mutated.
 				if (rand.nextFloat() <= mutation) {
                                         buffer[idx] = children[0];
                                         cross.set(idx, children[0]);
-					buffer[idx++] = children[0].mutate();
+					buffer[idx++] = children[0].mutate(idx-1);
                                         mutate.set(idx-1, children[0]);
 				} else {
 					buffer[idx++] = children[0];
@@ -126,7 +123,7 @@ public class Population {
 					if (rand.nextFloat() <= mutation) {
                                                 buffer[idx] = children[1];
                                                 cross.set(idx, children[1]);
-						buffer[idx] = children[1].mutate();
+						buffer[idx] = children[1].mutate(idx);
                                                 mutate.set(idx, children[1]);
 					} else {
 						buffer[idx] = children[1];
@@ -136,7 +133,7 @@ public class Population {
 			} else { // No crossover, so copy verbatium.
 				// Determine if mutation should occur.
 				if (rand.nextFloat() <= mutation) {
-					buffer[idx] = popArr[idx].mutate();
+					buffer[idx] = popArr[idx].mutate(idx);
                                         mutate.set(idx, buffer[idx]);
 				} else {
 					buffer[idx] = popArr[idx];

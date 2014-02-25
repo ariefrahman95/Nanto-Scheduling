@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
- * This class is used to define a chromosome for the genetic algorithm 
+ * This class is used to define a chromosome for the gentic algorithm 
  * simulation.  
  * 
  * This class is essentially nothing more than a container for the details 
@@ -36,12 +36,13 @@ import java.util.Random;
  * or <code>mutate</code> will result in a new <code>Chromosome</code>
  * instance being created.
  * 
- * @author Arief Rahman
- * @version Tubes 1
+ * @author John Svazic
+ * @version 1.0
  */
 public class Chromosome implements Comparable<Chromosome> {
 	private final String gene;
 	private final int fitness;
+        private int id;
 	
 	/** Convenience randomizer. */
 	private static final Random rand = new Random(System.currentTimeMillis());
@@ -51,10 +52,16 @@ public class Chromosome implements Comparable<Chromosome> {
 	 *
 	 * @param gene The gene representing this <code>Chromosome</code>.
 	 */
-	public Chromosome(String gene) {
+	public Chromosome(String gene, int num) {
 		this.gene    = gene;
 		this.fitness = calculateFitness(gene);
+                this.id = num; 
 	}
+	
+	/**
+	 * Default constructor that generates random gene for this
+	 * <code>Chromosome</code>.
+	 */
 	
 	/**
 	 * Method to retrieve the gene for this <code>Chromosome</code>.
@@ -64,6 +71,10 @@ public class Chromosome implements Comparable<Chromosome> {
 	public String getGene() {
 		return gene;
 	}
+        
+        public int getId(){
+            return id;
+        }
 	
 	/**
 	 * Method to retrieve the fitness of this <code>Chromosome</code>.  Note
@@ -221,7 +232,7 @@ public class Chromosome implements Comparable<Chromosome> {
 	 * 
 	 * @return A mutated version of this <code>Chromosome</code>.
 	 */
-	public Chromosome mutate() {
+	public Chromosome mutate(int n) { 
 		char[] arr  = gene.toCharArray();
 		int idx     = rand.nextInt(arr.length);
 		char[] possibleChars = ("0mgcu" + Nanto.itemCodes + Nanto.candidCodes)
@@ -229,7 +240,7 @@ public class Chromosome implements Comparable<Chromosome> {
 		char change = possibleChars[rand.nextInt(possibleChars.length)];
 		arr[idx]    = change;
 
-		return new Chromosome(String.valueOf(arr));
+		return new Chromosome(String.valueOf(arr),(n));
 	}
 
 	/**
@@ -240,7 +251,7 @@ public class Chromosome implements Comparable<Chromosome> {
 	 * 
 	 * @return The resulting <code>Chromosome</code> children.
 	 */
-	public Chromosome[] mate(Chromosome mate) {
+	public Chromosome[] mate(Chromosome mate,int n, int o) {
 		// Convert the genes to arrays to make thing easier.
 		char[] arr1  = gene.toCharArray();
 		char[] arr2  = mate.gene.toCharArray();
@@ -260,8 +271,8 @@ public class Chromosome implements Comparable<Chromosome> {
 		System.arraycopy(arr2, 0, child2, 0, pivot);
 		System.arraycopy(arr1, pivot, child2, pivot, (child2.length - pivot));
 
-		return new Chromosome[] { new Chromosome(String.valueOf(child1)), 
-				new Chromosome(String.valueOf(child2))}; 
+		return new Chromosome[] { new Chromosome(String.valueOf(child1),n),
+				new Chromosome(String.valueOf(child2),o)};
 	}
 	
 	/**
@@ -269,7 +280,7 @@ public class Chromosome implements Comparable<Chromosome> {
 	 * 
 	 * @return A randomly generated <code>Chromosome</code>.
 	 */
-	static Chromosome generateRandom() {
+	static Chromosome generateRandom(int n) {
 		char[] possibleChars = ("0mgcu" + Nanto.itemCodes + Nanto.candidCodes)
 				.toCharArray();
 		int length = 84 * Nanto.time;
@@ -279,13 +290,13 @@ public class Chromosome implements Comparable<Chromosome> {
 		for (int i=0; i<length;i++)
 			newGene[i]=possibleChars[rand.nextInt(possibleChars.length)];
 
-		return new Chromosome(String.valueOf(newGene));
+		return new Chromosome(String.valueOf(newGene),(n));
 	}
 
 	/**
 	 * Method to allow for comparing <code>Chromosome</code> objects with
 	 * one another based on fitness.  <code>Chromosome</code> ordering is 
-	 * based on the natural ordering of the fitness of the
+	 * based on the natural ordering of the fitnesses of the
 	 * <code>Chromosome</code>s.  
 	 * @param c Chromosome to be compared
 	 * @return -1 if this chromosome's fitness is less than c's fitness, 1 if
@@ -329,6 +340,6 @@ public class Chromosome implements Comparable<Chromosome> {
 	
 	@Override
 	public String toString() {
-		return gene + "\n" + fitness;
+		return gene + "\n" + fitness + " " + id;
 	}
 }

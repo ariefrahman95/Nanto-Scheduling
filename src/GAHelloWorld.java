@@ -127,7 +127,9 @@ public class GAHelloWorld {
 		// generations is reached, or when we find a solution.
 		int i = 0;
 		Chromosome best = pop.getPopulation()[0];
-		
+		for (int a=0;a<populationSize;a++){
+                    System.out.println("INIT " + a + " " + pop.getPopulation()[a] );
+                }
 		// Threshold
 		// By iterations
 		// i++ <= maxGenerations
