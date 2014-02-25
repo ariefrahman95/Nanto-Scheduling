@@ -21,6 +21,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -50,7 +51,9 @@ public class Population {
 	private float mutation;
 	private float crossover;
 	private Chromosome[] popArr;
-
+        public ArrayList<Chromosome> cross = new ArrayList<Chromosome>(6);
+        public ArrayList<Chromosome> mutate = new ArrayList<Chromosome>(6);
+        
 	/**
 	 * Default constructor.
 	 * 
@@ -72,7 +75,10 @@ public class Population {
 		this.mutation = mutationRatio;
 		
 		// Generate an initial population
-		this.popArr = new Chromosome[size];
+		this.popArr = new Chromosome[size];/*
+                this.cross = new Chromosome[size];
+                this.mutate = new Chromosome[size];
+                this.unsorted = new Chromosome[size];*/
 		for (int i = 0; i < size; i++) {
 			this.popArr[i] = Chromosome.generateRandom();
 		}
@@ -91,7 +97,10 @@ public class Population {
 		// the elitism ratio.
 		int idx = Math.round(popArr.length * elitism);
 		System.arraycopy(popArr, 0, buffer, 0, idx);
-
+                for (int z=0;z<popArr.length;z++){
+                    cross.add(popArr[z]);
+                    mutate.add(popArr[z]);
+                }
 		// Iterate over the remainder of the population and evolve as 
 		// appropriate.
 		while (idx < buffer.length) {
@@ -101,26 +110,34 @@ public class Population {
 				// Select the parents and mate to get their children
 				Chromosome[] parents = selectParents();
 				Chromosome[] children = parents[0].mate(parents[1]);
-				
+                                
 				// Check to see if the first child should be mutated.
 				if (rand.nextFloat() <= mutation) {
+                                        buffer[idx] = children[0];
+                                        cross.set(idx, children[0]);
 					buffer[idx++] = children[0].mutate();
+                                        mutate.set(idx-1, children[0]);
 				} else {
 					buffer[idx++] = children[0];
+                                        cross.set(idx-1, children[0]);
 				}
-				
 				// Repeat for the second child, if there is room.
 				if (idx < buffer.length) {
 					if (rand.nextFloat() <= mutation) {
+                                                buffer[idx] = children[1];
+                                                cross.set(idx, children[1]);
 						buffer[idx] = children[1].mutate();
+                                                mutate.set(idx, children[1]);
 					} else {
 						buffer[idx] = children[1];
+                                                cross.set(idx, children[1]);
 					}
 				}
 			} else { // No crossover, so copy verbatium.
 				// Determine if mutation should occur.
 				if (rand.nextFloat() <= mutation) {
 					buffer[idx] = popArr[idx].mutate();
+                                        mutate.set(idx, buffer[idx]);
 				} else {
 					buffer[idx] = popArr[idx];
 				}
@@ -129,7 +146,7 @@ public class Population {
 			// Increase our counter
 			++idx;
 		}
-
+                //unsorted = buffer;
 		// Sort the buffer based on fitness.
 		Arrays.sort(buffer);
 		
