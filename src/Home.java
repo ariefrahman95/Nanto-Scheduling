@@ -194,7 +194,7 @@ public class Home extends javax.swing.JFrame {
         int rVal = fc.showOpenDialog(Home.this);
         
         if (rVal == JFileChooser.APPROVE_OPTION) {
-            home_text_filePemain.setText(fc.getSelectedFile().getAbsolutePath());
+            home_text_jadwalKandidat.setText(fc.getSelectedFile().getAbsolutePath());
         }
     }//GEN-LAST:event_home_button_jadwalKandidatActionPerformed
 
@@ -206,7 +206,7 @@ public class Home extends javax.swing.JFrame {
         int rVal = fc.showOpenDialog(Home.this);
         
         if (rVal == JFileChooser.APPROVE_OPTION) {
-            home_text_filePemain.setText(fc.getSelectedFile().getAbsolutePath());
+            home_text_jadwalTempat.setText(fc.getSelectedFile().getAbsolutePath());
         }
     }//GEN-LAST:event_home_button_jadwalTempatActionPerformed
 
