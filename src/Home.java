@@ -1,4 +1,9 @@
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 
 /*
@@ -44,7 +49,7 @@ public class Home extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Nanto-Scheduling");
-        setBounds(new java.awt.Rectangle(5, 5, 350, 300));
+        setBounds(new java.awt.Rectangle(5, 5, 350, 760));
         setName("home_frame"); // NOI18N
         setPreferredSize(new java.awt.Dimension(350, 760));
         setResizable(false);
@@ -108,27 +113,28 @@ public class Home extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                        .addGap(223, 223, 223))
                     .addComponent(home_text_filePemain)
                     .addComponent(home_text_jadwalKandidat)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(home_label_filePemain)
-                            .addComponent(home_label_jadwalKandidat)
-                            .addComponent(home_label_jadwalTempat))
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(home_text_jadwalTempat)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(home_button_filePemain, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(home_button_jadwalKandidat, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(home_button_jadwalTempat, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(home_button_jadwalTempat, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(home_label_filePemain)
+                            .addComponent(home_label_jadwalKandidat)
+                            .addComponent(home_label_jadwalTempat)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(51, 51, 51)
+                                .addComponent(home_button_bikin, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(62, 62, 62)
-                .addComponent(home_button_bikin, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(69, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -153,9 +159,9 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(home_text_jadwalTempat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(home_button_jadwalTempat)
-                .addGap(35, 35, 35)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(home_button_bikin, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addContainerGap(378, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -211,7 +217,14 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_home_button_jadwalTempatActionPerformed
 
     private void home_button_bikinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_home_button_bikinActionPerformed
-        new GA().setVisible(true);
+        GA ga = new GA();
+        File f1 = new File(home_text_filePemain.getText());
+        File f2 = new File(home_text_jadwalKandidat.getText());
+        File f3 = new File(home_text_jadwalTempat.getText());
+        nanto.load(f1);
+        GAHelloWorld.load(f2, f3);
+        ga.setVisible(true);
+        ga.start();
     }//GEN-LAST:event_home_button_bikinActionPerformed
 
     public javax.swing.JTextField getFilePemain() {
@@ -261,7 +274,11 @@ public class Home extends javax.swing.JFrame {
             }
         });
     }
-
+    
+    // Variabel gue
+    Nanto nanto = new Nanto();
+    // Akhir dari variabel gue
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton home_button_bikin;
     private javax.swing.JButton home_button_filePemain;

@@ -1,3 +1,9 @@
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -41,7 +47,6 @@ public class GA extends javax.swing.JFrame {
         setForeground(new java.awt.Color(0, 0, 0));
         setName("GA_frame"); // NOI18N
         setPreferredSize(new java.awt.Dimension(450, 760));
-        setResizable(false);
 
         GA_panel_background.setBackground(new java.awt.Color(0, 0, 0));
         GA_panel_background.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -123,6 +128,77 @@ public class GA extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void start() {
+        // The size of the simulation population
+        final int populationSize = 6;
+		
+        // The maximum number of generations for the simulation.
+        final int maxGenerations = 16384;
+
+        // The probability of crossover for any member of the population,
+        // where 0.0 <= crossoverRatio <= 1.0
+        final float crossoverRatio = 1.0f;
+
+        // The portion of the population that will be retained without change
+        // between evolutions, where 0.0 <= elitismRatio < 1.0
+        final float elitismRatio = 0.0f;
+
+        // The probability of mutation for any member of the population,
+        // where 0.0 <= mutationRatio <= 1.0
+        final float mutationRatio = 1.0f;
+
+        // Get the current run time.  Not very accurate, but useful for 
+        // some simple reporting.
+        long startTime = System.currentTimeMillis();
+
+        // Create the initial population
+        Population pop = new Population(populationSize, crossoverRatio, 
+				elitismRatio, mutationRatio);
+        
+        ArrayList<String> string = new ArrayList<>(pop.getPopulation().length);
+        for (int i = 0; i < pop.getPopulation().length; i++) {
+            string.add(pop.getPopulation()[i].getGene());
+        }
+        String[] ts = new String[6];
+        getList().setListData(string.toArray(ts));
+
+        // Start evolving the population, stopping when the maximum number of
+        // generations is reached, or when we find a solution.
+        int i = 0;
+        Chromosome best = pop.getPopulation()[0];
+        for (int a=0;a<populationSize;a++){
+            System.out.println("INIT " + a + " " + pop.getPopulation()[a] );
+        }
+        // Threshold
+        // By iterations
+        // i++ <= maxGenerations
+        // By minimum enlightenment (example highscore : 90)
+        // best.getFitness() < 90
+
+        while (i++ <= maxGenerations) {
+                pop.evolve();
+                best = pop.getPopulation()[0];
+                for (int a=0;a<populationSize;a++){
+                    //System.out.println("CROSS " + a + " " + pop.cross.get(a) );
+                    //System.out.println("MUTATE " + a + " " + pop.mutate.get(a) );
+                }
+                //ngambil hasil cross pake "pop.cross.get(GENkeBERAPA)"
+                //ngambil hasil mutate pake "pop.mutate.get(GENkeBERAPA)"
+        }
+
+        // Get the end time for the simulation.
+        long endTime = System.currentTimeMillis();
+        try {
+            // Print out some information to the console.
+            GAHelloWorld.Export(best);
+        } catch (IOException ex) {
+            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("Best Gene    " + i + ": " + best.getGene());
+        System.out.println("Gene Fitness " + i + ": " + best.getFitness());
+        System.out.println("Total execution time: " + (endTime - startTime) + "ms");
+    }
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         new GUI().setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -135,6 +211,10 @@ public class GA extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_SkipThis
 
+    public javax.swing.JList<String> getList() {
+        return jList1;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel GA_panel_background;
     private javax.swing.JButton jButton1;

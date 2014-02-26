@@ -89,7 +89,7 @@ public class GAHelloWorld {
             fw.close();
         }
     
-	public static void main(String[] args) throws IOException {
+	/*public static void main(String[] args) throws IOException {
 		File f1 = new File("info.txt");
         File f2 = new File("kandidat.txt");
         File f3 = new File("tempat.txt");
@@ -156,5 +156,5 @@ public class GAHelloWorld {
 		System.out.println("Gene Fitness " + i + ": " + best.getFitness());
 		System.out.println("Total execution time: " + (endTime - startTime) + 
 				"ms");
-	}
+	}*/
 }
