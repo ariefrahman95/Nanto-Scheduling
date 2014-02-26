@@ -54,10 +54,16 @@ public class GA extends javax.swing.JFrame {
         jCheckBox1.setBackground(new java.awt.Color(0, 0, 0));
         jCheckBox1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jCheckBox1.setForeground(new java.awt.Color(0, 255, 0));
-        jCheckBox1.setText("Tampilkan jadwal secara otomatis");
+        jCheckBox1.setText("Lewatkan Tahap Ini");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SkipThis(evt);
+            }
+        });
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton1.setText("Tampilkan Jadwal");
+        jButton1.setEnabled(false);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -83,7 +89,7 @@ public class GA extends javax.swing.JFrame {
                 .addGroup(GA_panel_backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(GA_panel_backgroundLayout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jCheckBox1))
                     .addComponent(jScrollPane1))
@@ -120,6 +126,14 @@ public class GA extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         new GUI().setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void SkipThis(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SkipThis
+        if (jCheckBox1.isSelected()) {
+            jButton1.setEnabled(true);
+        } else {
+            jButton1.setEnabled(false);
+        }
+    }//GEN-LAST:event_SkipThis
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel GA_panel_background;
