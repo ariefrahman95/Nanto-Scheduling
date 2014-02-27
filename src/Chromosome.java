@@ -1,8 +1,6 @@
 /*
 * The MIT License
 * 
-* Copyright (c) 2011 John Svazic
-* 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
@@ -36,13 +34,13 @@ import java.util.Random;
  * or <code>mutate</code> will result in a new <code>Chromosome</code>
  * instance being created.
  * 
- * @author John Svazic
- * @version 1.0
+ * @author Arief Rahman
+ * @version Tubes 1
  */
 public class Chromosome implements Comparable<Chromosome> {
 	private final String gene;
 	private final int fitness;
-        private int id;
+    private int id;
 	
 	/** Convenience randomizer. */
 	private static final Random rand = new Random(System.currentTimeMillis());
@@ -51,11 +49,12 @@ public class Chromosome implements Comparable<Chromosome> {
 	 * Default constructor.
 	 *
 	 * @param gene The gene representing this <code>Chromosome</code>.
+	 * @param num The id for the gene in population.
 	 */
 	public Chromosome(String gene, int num) {
 		this.gene    = gene;
 		this.fitness = calculateFitness(gene);
-                this.id = num; 
+        this.id = num; 
 	}
 	
 	/**
@@ -71,10 +70,15 @@ public class Chromosome implements Comparable<Chromosome> {
 	public String getGene() {
 		return gene;
 	}
-        
-        public int getId(){
-            return id;
-        }
+     
+	/**
+	 * Method to retrieve the id for this <code>Chromosome</code>.
+	 *
+	 * @return The id for this <code>Chromosome</code>.
+	 */
+    public int getId(){
+       return id;
+    }
 	
 	/**
 	 * Method to retrieve the fitness of this <code>Chromosome</code>.  Note
@@ -220,6 +224,175 @@ public class Chromosome implements Comparable<Chromosome> {
 		}
 		
 		return fitness;
+	}
+	
+	/**
+	 * Helper method used to optimize a given gene.
+	 * 
+	 * @param gene The gene to be optimized.
+	 * 
+	 * @return The optimized gene.
+	 */
+	private static Chromosome optimize(String gene, int id) {
+		// Game states
+		int energyPerDay = Nanto.energy;
+		int money = Nanto.money;
+		int strength = Nanto.strength;
+		int charm = Nanto.charm;
+		int brain = Nanto.brain;
+		int curEnergy;
+		
+		HashMap<Character, Integer> stock = new HashMap<> ();
+		HashMap<Character, Integer> inventory = new HashMap<> ();
+		HashMap<Character, Integer> maxVisit = new HashMap<> ();
+		boolean[] triedToMeet = new boolean[Nanto.nCandidate];
+		char[] geneArr = gene.toCharArray();
+		char[] itemCode = Nanto.itemCodes.toCharArray();
+		char[] candidCode = Nanto.candidCodes.toCharArray();
+		
+		for(int i = 0; i < Nanto.nCandidate; i++) {
+			triedToMeet[i] = false;
+		}
+		
+		// Set inventory
+		for(int i = 0; i < Nanto.nItem; i++) {
+			inventory.put(itemCode[i], 0);
+		}
+		
+		char[] possibleChars = ("0mgcu" + Nanto.itemCodes + Nanto.candidCodes)
+				.toCharArray();
+		int length = possibleChars.length;
+		
+		int day = 0;
+		int hour = 0;
+		boolean validAction = true;
+		
+		while(day < 7 * Nanto.time) {
+			hour = 0;
+			// Restock items for sale
+			for(int x = 0; x < Nanto.nItem; x++) {
+				Item temp = Nanto.items.get(itemCode[x]);
+				stock.put(temp.getCode(), temp.getRestock());
+			}
+			
+			// Restore max visit per candidate
+			for(int x = 0; x < Nanto.nCandidate; x++) {
+				Candidate temp = Nanto.candid.get(candidCode[x]);
+				maxVisit.put(candidCode[x], temp.getMax());
+			}
+			
+			// Recharge energy
+			curEnergy = energyPerDay;
+			
+			while(hour < 12) {
+				int idx = hour + day * 12;
+				if(geneArr[idx] == '0') {
+					validAction = true;
+				} else if(Character.isUpperCase(geneArr[idx])) {
+					// Check if it's item code
+					for(int x = 0; x < Nanto.nItem; x++) {
+						if(geneArr[idx] == itemCode[x]) {
+							// Check if money is enough and there is stock
+							Item toBuy = Nanto.items.get(itemCode[x]);
+							int price = toBuy.getPrice();
+							int curStock = stock.get(itemCode[x]);
+							if(money >= price && stock.get(itemCode[x]) != 0) {
+								money -= price;
+								stock.put(itemCode[x], curStock - 1);
+								int curInventory = inventory.get(itemCode[x]);
+								inventory.put(itemCode[x], curInventory + 1);
+								validAction = true;
+							} else {
+								validAction = false;
+							}
+							break;
+						}
+					}
+				} else if (Character.isDigit(geneArr[idx])) {
+					// Check if it's candidate code
+					for(int x = 0; x < Nanto.nCandidate; x++) {
+						if(geneArr[idx] == candidCode[x]) {
+							// Check if all prerequisite is enough
+							Candidate toVisit = Nanto.candid.get(candidCode[x]);
+							char[] prereq = toVisit.getPrerequisite();
+							boolean haveItems = true;
+							if(prereq[0] != '-') {
+								for(int k = 0; k < prereq.length; k++) {
+									if(inventory.get(prereq[k]) == 0) {
+										haveItems = false;
+										break;
+									}
+								}
+							}
+							int visitRemaining = maxVisit.get(candidCode[x]);
+							if(haveItems &&
+									Nanto.jCandid[x][idx % 84] == 1 &&
+									visitRemaining != 0 &&
+									brain >= toVisit.getBrain() &&
+									charm >= toVisit.getCharm() &&
+									strength >= toVisit.getStrength() &&
+									curEnergy >= toVisit.getEnergy()) {
+								curEnergy -= toVisit.getEnergy();
+								visitRemaining--;
+								maxVisit.put(candidCode[x], visitRemaining);
+								if(visitRemaining == 0 || idx == Nanto.time * 84 - 1 || 
+										geneArr[idx] != geneArr[idx+1]) {
+									for(int k = 0; k < prereq.length; k++) {
+										if(prereq[k] != '-') {											
+											int amount = inventory.get(prereq[k]);
+											inventory.put(prereq[k], amount - 1);
+										}
+									}
+								}
+								triedToMeet[x] = true;
+								validAction = true;
+							} else {
+								validAction = false;
+							}
+							break;
+						}
+					}
+				} else if(geneArr[idx] == 'm') {
+					if(Nanto.jPlace[0][idx % 84] ==	 1 && curEnergy >= 8) {
+						money += 10000;
+						curEnergy -= 8;
+						validAction = true;
+					} else {
+						validAction = false;
+					}
+				} else if(geneArr[idx] == 'g') {
+					if(Nanto.jPlace[1][idx % 84] == 1 && curEnergy >= 12) {
+						strength += 2;
+						curEnergy -= 12;
+						validAction = true;
+					} else {
+						validAction = false;
+					}
+				} else if(geneArr[idx] == 'c') {
+					if(Nanto.jPlace[2][idx % 84] == 1 &&	curEnergy >= 6) {
+						charm += 2;
+						curEnergy -= 6;
+						validAction = true;
+					} else {
+						validAction = false;
+					}
+				} else if(geneArr[idx] == 'u') {
+					if(Nanto.jPlace[3][idx % 84] == 1 &&	curEnergy >= 15) {
+						brain += 3;
+						curEnergy -= 15;
+						validAction = true;
+					} else {
+						validAction = false;
+					}
+				}
+				if(validAction == true) hour++;
+				else {
+					geneArr[idx] = possibleChars[rand.nextInt(length)];
+				}
+			}
+			day++;
+		}
+		return new Chromosome(String.valueOf(geneArr), id);
 	}
 
 	/**

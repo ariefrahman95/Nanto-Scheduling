@@ -1,8 +1,6 @@
 /*
 * The MIT License
 * 
-* Copyright (c) 2011 John Svazic
-* 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
@@ -36,8 +34,8 @@ import java.util.Random;
  * Note that this object is mutable, and calls to the <code>evolve()</code>
  * method will change the collection of <code>Chromosome</code>s.
  * 
- * @author John Svazic
- * @version 1.0
+ * @author Arief Rahman
+ * @version Tubes 1
  */
 public class Population {
 
