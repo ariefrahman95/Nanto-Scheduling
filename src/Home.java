@@ -224,7 +224,7 @@ public class Home extends javax.swing.JFrame {
         nanto.load(f1);
         GAHelloWorld.load(f2, f3);
         ga.setVisible(true);
-        ga.start();
+        ga.prepare();
     }//GEN-LAST:event_home_button_bikinActionPerformed
 
     public javax.swing.JTextField getFilePemain() {
