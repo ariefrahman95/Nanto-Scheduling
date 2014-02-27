@@ -16,6 +16,95 @@ import java.util.logging.Logger;
  */
 public class GA extends javax.swing.JFrame {
 
+    public class GARunnable implements Runnable {
+
+        // The size of the simulation population
+        final int populationSize = 6;
+
+        // The maximum number of generations for the simulation.
+        final int maxGenerations = 16384;
+
+        // The probability of crossover for any member of the population,
+        // where 0.0 <= crossoverRatio <= 1.0
+        final float crossoverRatio = 1.0f;
+
+        // The portion of the population that will be retained without change
+        // between evolutions, where 0.0 <= elitismRatio < 1.0
+        final float elitismRatio = 0.0f;
+
+        // The probability of mutation for any member of the population,
+        // where 0.0 <= mutationRatio <= 1.0
+        final float mutationRatio = 1.0f;
+
+        // Create the initial population
+        Population pop = null;
+
+        int i = 0;
+
+        Chromosome best = null;
+    
+        GA ga = null;
+        
+        public void setGA(GA ga) {
+            this.ga = ga;
+        }
+        
+        @Override
+        public void run() {
+            // Get the current run time.  Not very accurate, but useful for 
+            // some simple reporting.
+            //long startTime = System.currentTimeMillis();
+            
+            // Create the initial population
+            pop = new Population(populationSize, crossoverRatio, 
+				elitismRatio, mutationRatio);
+            
+            // Start evolving the population, stopping when the maximum number of
+            // generations is reached, or when we find a solution.
+            best = pop.getPopulation()[0];
+            for (int a=0;a<populationSize;a++){
+                System.out.println("INIT " + a + " " + pop.getPopulation()[a] );
+            }
+
+            // Threshold
+            // By iterations
+            // i++ <= maxGenerations
+            // By minimum enlightenment (example highscore : 90)
+            // best.getFitness() < 90
+
+            while (i++ <= maxGenerations) {
+                ga.genes.clear();
+                for (int i = 0; i < pop.getPopulation().length; i++) {
+                    ga.genes.add(pop.getPopulation()[i].getGene());
+                }
+                ga.invalidate();
+                ga.validate();
+                
+                pop.evolve();
+                best = pop.getPopulation()[0];
+                for (int a=0;a<populationSize;a++){
+                    //System.out.println("CROSS " + a + " " + pop.cross.get(a) );
+                    //System.out.println("MUTATE " + a + " " + pop.mutate.get(a) );
+                }
+                //ngambil hasil cross pake "pop.cross.get(GENkeBERAPA)"
+                //ngambil hasil mutate pake "pop.mutate.get(GENkeBERAPA)"
+            }
+
+            // Get the end time for the simulation.
+            //long endTime = System.currentTimeMillis();
+            try {
+                // Print out some information to the console.
+                GAHelloWorld.Export(best);
+            } catch (IOException ex) {
+                Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            System.out.println("Best Gene    " + i + ": " + best.getGene());
+            System.out.println("Gene Fitness " + i + ": " + best.getFitness());
+            //System.out.println("Total execution time: " + (endTime - startTime) + "ms");
+        }
+    
+    }
+
     /**
      * Creates new form GA
      */
@@ -128,82 +217,20 @@ public class GA extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void prepare() {
-        // Create the initial population
-        pop = new Population(populationSize, crossoverRatio, 
-				elitismRatio, mutationRatio);
+    @Override
+    public void validate() {
+        super.validate();
         
-        // display first generatin to GUI
-        ArrayList<String> string = new ArrayList<>(pop.getPopulation().length);
-        for (int i = 0; i < pop.getPopulation().length; i++) {
-            string.add(pop.getPopulation()[i].getGene());
-        }
-        String[] ts = new String[6];
-        getList().setListData(string.toArray(ts));
-        
-        while (i <= maxGenerations) {
-            start();
+        if (genes != null) {
+            String[] ts = new String[6];
+            getList().setListData(genes.toArray(ts));
         }
     }
-
+    
     public void start() {
-        if (isGUI) {
-            isGUI = false;
-            return;
-        } else {
-            best = pop.getPopulation()[0];
-            if (i++ <= maxGenerations) {
-                pop.evolve();
-                best = pop.getPopulation()[0];
-                for (int a=0;a<populationSize;a++){
-                    //System.out.println("CROSS " + a + " " + pop.cross.get(a) );
-                    //System.out.println("MUTATE " + a + " " + pop.mutate.get(a) );
-                }
-                //ngambil hasil cross pake "pop.cross.get(GENkeBERAPA)"
-                //ngambil hasil mutate pake "pop.mutate.get(GENkeBERAPA)"
-            }
-            isGUI = true;
-            return;
-        }
-        // Get the current run time.  Not very accurate, but useful for 
-        // some simple reporting.
-        //long startTime = System.currentTimeMillis();
-
-        // Start evolving the population, stopping when the maximum number of
-        // generations is reached, or when we find a solution.
-        //best = pop.getPopulation()[0];
-        //for (int a=0;a<populationSize;a++){
-            //System.out.println("INIT " + a + " " + pop.getPopulation()[a] );
-        //}
-
-        // Threshold
-        // By iterations
-        // i++ <= maxGenerations
-        // By minimum enlightenment (example highscore : 90)
-        // best.getFitness() < 90
-        
-        /*while (i++ <= maxGenerations) {
-                pop.evolve();
-                best = pop.getPopulation()[0];
-                for (int a=0;a<populationSize;a++){
-                    //System.out.println("CROSS " + a + " " + pop.cross.get(a) );
-                    //System.out.println("MUTATE " + a + " " + pop.mutate.get(a) );
-                }
-                //ngambil hasil cross pake "pop.cross.get(GENkeBERAPA)"
-                //ngambil hasil mutate pake "pop.mutate.get(GENkeBERAPA)"
-        }*/
-
-        // Get the end time for the simulation.
-        //long endTime = System.currentTimeMillis();
-        /*try {
-            // Print out some information to the console.
-            GAHelloWorld.Export(best);
-        } catch (IOException ex) {
-            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println("Best Gene    " + i + ": " + best.getGene());
-        System.out.println("Gene Fitness " + i + ": " + best.getFitness());*/
-        //System.out.println("Total execution time: " + (endTime - startTime) + "ms");
+        GARunnable gar = new GARunnable();
+        gar.setGA(this);
+        (new Thread(gar)).start();
     }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -222,32 +249,7 @@ public class GA extends javax.swing.JFrame {
         return jList1;
     }
     
-     // The size of the simulation population
-    final int populationSize = 6;
-
-    // The maximum number of generations for the simulation.
-    final int maxGenerations = 16384;
-
-    // The probability of crossover for any member of the population,
-    // where 0.0 <= crossoverRatio <= 1.0
-    final float crossoverRatio = 1.0f;
-
-    // The portion of the population that will be retained without change
-    // between evolutions, where 0.0 <= elitismRatio < 1.0
-    final float elitismRatio = 0.0f;
-
-    // The probability of mutation for any member of the population,
-    // where 0.0 <= mutationRatio <= 1.0
-    final float mutationRatio = 1.0f;
-    
-    // Create the initial population
-    Population pop = null;
-    
-    int i = 0;
-    
-    boolean isGUI = true;
-    
-    Chromosome best = null;
+    ArrayList<String> genes = new ArrayList<>();
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel GA_panel_background;
