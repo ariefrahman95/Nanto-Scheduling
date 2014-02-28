@@ -19,6 +19,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+import java.io.File;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -112,9 +113,15 @@ public class Chromosome implements Comparable<Chromosome> {
 		HashMap<Character, Integer> stock = new HashMap<> ();
 		HashMap<Character, Integer> inventory = new HashMap<> ();
 		HashMap<Character, Integer> maxVisit = new HashMap<> ();
+		boolean[] metAtLeastOnce = new boolean[Nanto.nCandidate];
 		char[] geneArr = gene.toCharArray();
 		char[] itemCode = Nanto.itemCodes.toCharArray();
 		char[] candidCode = Nanto.candidCodes.toCharArray();
+		
+		// Set "met at least once" table
+		for(int i = 0; i < Nanto.nCandidate; i++) {
+			metAtLeastOnce[i] = false;
+		}
 		
 		// Set inventory
 		for(int i = 0; i < Nanto.nItem; i++) {
@@ -195,6 +202,7 @@ public class Chromosome implements Comparable<Chromosome> {
 										}
 									}
 								}
+								metAtLeastOnce[x] = true;
 							}
 							break;
 						}
@@ -223,6 +231,10 @@ public class Chromosome implements Comparable<Chromosome> {
 			}
 		}
 		
+		for(int i = 0; i < Nanto.nCandidate; i++) {
+			if(metAtLeastOnce[i] == false) return -1;
+		}
+		
 		return fitness;
 	}
 	
@@ -245,13 +257,14 @@ public class Chromosome implements Comparable<Chromosome> {
 		HashMap<Character, Integer> stock = new HashMap<> ();
 		HashMap<Character, Integer> inventory = new HashMap<> ();
 		HashMap<Character, Integer> maxVisit = new HashMap<> ();
-		boolean[] triedToMeet = new boolean[Nanto.nCandidate];
+		boolean[] metAtLeastOnce = new boolean[Nanto.nCandidate];
 		char[] geneArr = gene.toCharArray();
 		char[] itemCode = Nanto.itemCodes.toCharArray();
 		char[] candidCode = Nanto.candidCodes.toCharArray();
 		
+		// Set "met at least once" table
 		for(int i = 0; i < Nanto.nCandidate; i++) {
-			triedToMeet[i] = false;
+			metAtLeastOnce[i] = false;
 		}
 		
 		// Set inventory
@@ -344,7 +357,7 @@ public class Chromosome implements Comparable<Chromosome> {
 										}
 									}
 								}
-								triedToMeet[x] = true;
+								metAtLeastOnce[x] = true;
 								validAction = true;
 							} else {
 								validAction = false;
@@ -369,7 +382,7 @@ public class Chromosome implements Comparable<Chromosome> {
 						validAction = false;
 					}
 				} else if(geneArr[idx] == 'c') {
-					if(Nanto.jPlace[2][idx % 84] == 1 &&	curEnergy >= 6) {
+					if(Nanto.jPlace[2][idx % 84] == 1 && curEnergy >= 6) {
 						charm += 2;
 						curEnergy -= 6;
 						validAction = true;
@@ -387,7 +400,82 @@ public class Chromosome implements Comparable<Chromosome> {
 				}
 				if(validAction == true) hour++;
 				else {
-					geneArr[idx] = possibleChars[rand.nextInt(length)];
+					// Optimize by visiting all candidates first
+					boolean madeAction = false;
+					boolean metAllCandids = true;
+					for(int i = 0; i < Nanto.nCandidate; i++) {
+						if(metAtLeastOnce[i] == false) {
+							metAllCandids = false;
+							Candidate toVisit = Nanto.candid.get(candidCode[i]);
+							
+							// Is candidate available?
+							if(Nanto.jCandid[i][idx % 84] == 0) continue;
+							if(maxVisit.get(candidCode[i]) == 0) continue;
+							
+							// Check if all prereq parameters are enough
+							if(charm < toVisit.getCharm()) {
+								if(curEnergy >= 6 && Nanto.jPlace[1][idx % 84] == 1){
+									geneArr[idx] = 'c';	
+									madeAction = true;
+									break;
+								} else continue;
+							}
+							if(strength < toVisit.getStrength()) {
+								if(curEnergy >= 12 && Nanto.jPlace[0][idx % 84] == 1) {
+									geneArr[idx] = 'g';
+									madeAction = true;
+									break;
+								} else continue;
+							}
+							if(brain < toVisit.getBrain()) {
+								if(curEnergy >= 15 && Nanto.jPlace[2][idx % 84] == 1) {
+									geneArr[idx] = 'u';
+									madeAction = true;
+									break;
+								} else continue;
+							}
+							
+							// Check inventory
+							char[] prereq = toVisit.getPrerequisite();
+							boolean haveItems = true;
+							if(prereq[0] != '-') {
+								for(int j = 0; j < prereq.length; j++) {
+									if(inventory.get(prereq[j]) == 0) {
+										haveItems = false;
+										// Check if money is enough to buy item
+										Item toBuy = Nanto.items.get(prereq[j]);
+										int price = toBuy.getPrice();
+										int curStock = stock.get(prereq[j]);
+										if(money >= price && curStock != 0) {
+											// Buy item on next action
+											geneArr[idx] = prereq[j];
+											madeAction = true;
+											break;
+										} else {
+											// Try going to mall on next action
+											if(curEnergy >= 8) {
+												geneArr[idx] = 'm';
+												madeAction = true;
+												break;
+											}
+										}
+										break;
+									}
+								}
+							}
+							
+							if(haveItems == true && curEnergy >= toVisit.getEnergy()) {
+								geneArr[idx] = candidCode[i];
+							} else geneArr[idx] = '0';
+							break;
+						}
+					}
+					if(metAllCandids == true) {
+						geneArr[idx] = possibleChars[rand.nextInt(length)];
+					} else if(madeAction == false) {
+						geneArr[idx] = '0';
+					}
+//					System.out.println(String.valueOf(geneArr));
 				}
 			}
 			day++;
@@ -463,7 +551,8 @@ public class Chromosome implements Comparable<Chromosome> {
 		for (int i=0; i<length;i++)
 			newGene[i]=possibleChars[rand.nextInt(possibleChars.length)];
 
-		return new Chromosome(String.valueOf(newGene),(n));
+//		System.out.println(String.valueOf(newGene));
+		return optimize(String.valueOf(newGene),(n));
 	}
 
 	/**
@@ -514,5 +603,18 @@ public class Chromosome implements Comparable<Chromosome> {
 	@Override
 	public String toString() {
 		return gene + "\n" + fitness + " " + id;
+	}
+	
+	public static void main(String[] args) {
+		File f1 = new File("info.txt");
+        File f2 = new File("kandidat.txt");
+        File f3 = new File("tempat.txt");
+        Nanto n = new Nanto();
+        n.load(f1);
+        Genetic.load(f2,f3);
+		Chromosome c1 = new Chromosome("30mDA0CguC0AuA3034AgAcm03m3cDgCCgCgADu444mCAg03330CguAg0u42cA2gDDB1mg3B4u3mcgmD304g01c0cA0DgucAB1C0D0Dumm3DAgB34c2mu1D3AmD1cDcB2AcAm10mg3mc131Ccg4gCu3ADD1m4ggD2m0020CA3", 1);
+		System.out.println(c1);
+		Chromosome c2 = optimize(c1.getGene(), 2);
+		System.out.println(c2);
 	}
 }

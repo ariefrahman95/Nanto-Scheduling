@@ -222,7 +222,7 @@ public class Home extends javax.swing.JFrame {
         File f2 = new File(home_text_jadwalKandidat.getText());
         File f3 = new File(home_text_jadwalTempat.getText());
         nanto.load(f1);
-        GAHelloWorld.load(f2, f3);
+        Genetic.load(f2, f3);
         ga.setVisible(true);
         ga.start();
     }//GEN-LAST:event_home_button_bikinActionPerformed

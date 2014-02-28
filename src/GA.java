@@ -190,7 +190,7 @@ public class GA extends javax.swing.JFrame {
         long endTime = System.currentTimeMillis();
         try {
             // Print out some information to the console.
-            GAHelloWorld.Export(best);
+            Genetic.Export(best);
         } catch (IOException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -35,7 +35,7 @@ import java.util.Scanner;
  * @author Arief Rahman
  * @version Tubes 1
  */
-public class GAHelloWorld {
+public class Genetic {
 
 	/**
 	 * The main method used for execution of the application.
@@ -87,7 +87,7 @@ public class GAHelloWorld {
             fw.close();
         }
     
-	/*public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 		File f1 = new File("info.txt");
         File f2 = new File("kandidat.txt");
         File f3 = new File("tempat.txt");
@@ -99,19 +99,19 @@ public class GAHelloWorld {
 		final int populationSize = 6;
 		
 		// The maximum number of generations for the simulation.
-		final int maxGenerations = 16384;
+		final int maxGenerations = 30000;
 		
 		// The probability of crossover for any member of the population,
 		// where 0.0 <= crossoverRatio <= 1.0
-		final float crossoverRatio = 1.0f;
+		final float crossoverRatio = 0.2f;
 		
 		// The portion of the population that will be retained without change
 		// between evolutions, where 0.0 <= elitismRatio < 1.0
-		final float elitismRatio = 0.0f;
+		final float elitismRatio = 0.1f;
 		
 		// The probability of mutation for any member of the population,
 		// where 0.0 <= mutationRatio <= 1.0
-		final float mutationRatio = 1.0f;
+		final float mutationRatio = 0.4f;
 	
 		// Get the current run time.  Not very accurate, but useful for 
 		// some simple reporting.
@@ -125,9 +125,9 @@ public class GAHelloWorld {
 		// generations is reached, or when we find a solution.
 		int i = 0;
 		Chromosome best = pop.getPopulation()[0];
-		for (int a=0;a<populationSize;a++){
-                    System.out.println("INIT " + a + " " + pop.getPopulation()[a] );
-                }
+//		for (int a=0;a<populationSize;a++){
+//                    System.out.println("INIT " + a + " " + pop.getPopulation()[a] );
+//                }
 		// Threshold
 		// By iterations
 		// i++ <= maxGenerations
@@ -137,10 +137,10 @@ public class GAHelloWorld {
 		while (i++ <= maxGenerations) {
 			pop.evolve();
 			best = pop.getPopulation()[0];
-                        for (int a=0;a<populationSize;a++){
+                        //for (int a=0;a<populationSize;a++){
                             //System.out.println("CROSS " + a + " " + pop.cross.get(a) );
                             //System.out.println("MUTATE " + a + " " + pop.mutate.get(a) );
-                        }
+                        //}
                         //ngambil hasil cross pake "pop.cross.get(GENkeBERAPA)"
                         //ngambil hasil mutate pake "pop.mutate.get(GENkeBERAPA)"
 		}
@@ -154,5 +154,5 @@ public class GAHelloWorld {
 		System.out.println("Gene Fitness " + i + ": " + best.getFitness());
 		System.out.println("Total execution time: " + (endTime - startTime) + 
 				"ms");
-	}*/
+	}
 }
