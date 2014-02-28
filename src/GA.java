@@ -20,22 +20,22 @@ public class GA extends javax.swing.JFrame {
     public class GARunnable implements Runnable {
 
         // The size of the simulation population
-        final int populationSize = 6;
-
-        // The maximum number of generations for the simulation.
-        final int maxGenerations = 16384;
-
-        // The probability of crossover for any member of the population,
-        // where 0.0 <= crossoverRatio <= 1.0
-        final float crossoverRatio = 1.0f;
-
-        // The portion of the population that will be retained without change
-        // between evolutions, where 0.0 <= elitismRatio < 1.0
-        final float elitismRatio = 0.0f;
-
-        // The probability of mutation for any member of the population,
-        // where 0.0 <= mutationRatio <= 1.0
-        final float mutationRatio = 1.0f;
+		final int populationSize = 6;
+		
+		// The maximum number of generations for the simulation.
+		final int maxGenerations = 30000;
+		
+		// The probability of crossover for any member of the population,
+		// where 0.0 <= crossoverRatio <= 1.0
+		final float crossoverRatio = 0.5f;
+		
+		// The portion of the population that will be retained without change
+		// between evolutions, where 0.0 <= elitismRatio < 1.0
+		final float elitismRatio = 0.2f;
+		
+		// The probability of mutation for any member of the population,
+		// where 0.0 <= mutationRatio <= 1.0
+		final float mutationRatio = 0.9f;
 
         // Create the initial population
         Population pop = null;
@@ -63,9 +63,9 @@ public class GA extends javax.swing.JFrame {
             // Start evolving the population, stopping when the maximum number of
             // generations is reached, or when we find a solution.
             best = pop.getPopulation()[0];
-            for (int a=0;a<populationSize;a++){
-                System.out.println("INIT " + a + " " + pop.getPopulation()[a] );
-            }
+            //for (int a=0;a<populationSize;a++){
+                //System.out.println("INIT " + a + " " + pop.getPopulation()[a] );
+            //}
 
             // Threshold
             // By iterations
@@ -81,7 +81,7 @@ public class GA extends javax.swing.JFrame {
                 }
                 ga.generation++;
                 
-                ga.dnas.clear();
+                /*ga.dnas.clear();
                 for (int i = 0; i < pop.getPopulation().length; i++) {
                     ArrayList<JLabel> labels = new ArrayList<>();
                     for (int j = 0; j < pop.getPopulation()[i].getGene().length(); j++) {
@@ -97,7 +97,7 @@ public class GA extends javax.swing.JFrame {
                     fitnesss.add(label);
                     ga.dnas.add(labels);
                     ga.dnas.add(fitnesss);
-                }
+                }*/
                 
                 ga.invalidate();
                 ga.validate();
@@ -113,7 +113,7 @@ public class GA extends javax.swing.JFrame {
                 
                 if (ga.getCheckBox().isSelected()) {
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(100);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(GA.class.getName()).log(Level.SEVERE, null, ex);
                     }

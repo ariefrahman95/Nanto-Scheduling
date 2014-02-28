@@ -103,15 +103,15 @@ public class Genetic {
 		
 		// The probability of crossover for any member of the population,
 		// where 0.0 <= crossoverRatio <= 1.0
-		final float crossoverRatio = 0.2f;
+		final float crossoverRatio = 0.5f;
 		
 		// The portion of the population that will be retained without change
 		// between evolutions, where 0.0 <= elitismRatio < 1.0
-		final float elitismRatio = 0.1f;
+		final float elitismRatio = 0.2f;
 		
 		// The probability of mutation for any member of the population,
 		// where 0.0 <= mutationRatio <= 1.0
-		final float mutationRatio = 0.4f;
+		final float mutationRatio = 0.9f;
 	
 		// Get the current run time.  Not very accurate, but useful for 
 		// some simple reporting.

@@ -161,7 +161,7 @@ public class Chromosome implements Comparable<Chromosome> {
 								stock.put(itemCode[x], curStock - 1);
 								int curInventory = inventory.get(itemCode[x]);
 								inventory.put(itemCode[x], curInventory + 1);
-							}
+							} else return -1;
 							break;
 						}
 					}
@@ -203,7 +203,7 @@ public class Chromosome implements Comparable<Chromosome> {
 									}
 								}
 								metAtLeastOnce[x] = true;
-							}
+							} else return -1;
 							break;
 						}
 					}
@@ -211,22 +211,24 @@ public class Chromosome implements Comparable<Chromosome> {
 					if(Nanto.jPlace[0][idx % 84] ==	 1 && curEnergy >= 8) {
 						money += 10000;
 						curEnergy -= 8;
-					}
+					} else return -1;
 				} else if(geneArr[idx] == 'g') {
 					if(Nanto.jPlace[1][idx % 84] == 1 && curEnergy >= 12) {
 						strength += 2;
 						curEnergy -= 12;
-					}
+					} else return -1;
 				} else if(geneArr[idx] == 'c') {
 					if(Nanto.jPlace[2][idx % 84] == 1 &&	curEnergy >= 6) {
 						charm += 2;
 						curEnergy -= 6;
-					}
+					} else return -1;
 				} else if(geneArr[idx] == 'u') {
 					if(Nanto.jPlace[3][idx % 84] == 1 &&	curEnergy >= 15) {
 						brain += 3;
 						curEnergy -= 15;
-					}
+					} else return -1;
+				} else {
+					return -1;
 				}
 			}
 		}
